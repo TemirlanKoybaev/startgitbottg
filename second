@@ -1,0 +1,118 @@
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot('7675435772:AAEyZchpvacB6sL1p1dvLZZrIcE8FBQr6DU')
+
+user_current_question = {}
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+      bot.send_message(message.chat.id, 'Привет! Я помогу тебе освоить Git.')
+
+      markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+      yes_button = types.KeyboardButton('✅ Да')
+      no_button = types.KeyboardButton('❌ Нет')
+
+      check_knowledge_button = types.KeyboardButton('🎓 Проверить знания по Git')
+      flashcards_button = types.KeyboardButton('📝 Учебные карточки по Git')
+      markup.add(yes_button, no_button, check_knowledge_button, flashcards_button)
+
+      bot.send_message(message.chat.id, 'Установлен ли у тебя Git?', reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text in ['✅ Да', '❌ Нет'])
+def handle_git_response(message):
+      if message.text == '✅ Да':
+            markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            vs_code_button = types.KeyboardButton('🖥 Visual Studio/VS Code')
+            terminal_button = types.KeyboardButton('💻 Терминал')
+            main_menu_button = types.KeyboardButton('🏠 Вернуться к главному меню', request_contact=False)
+            markup.add(vs_code_button, terminal_button)
+            markup.add(main_menu_button)
+
+            bot.send_message(message.chat.id, 'Как ты хочешь работать с Git?', reply_markup=markup)
+
+      elif message.text == '❌ Нет':
+            markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            windows_button = types.KeyboardButton('🖥 Windows')
+            macos_button = types.KeyboardButton('🍏 MacOS')
+            linux_button = types.KeyboardButton('🐧 Linux')
+            main_menu_button = types.KeyboardButton('🏠 Вернуться к главному меню', request_contact=False)
+            markup.add(windows_button, macos_button, linux_button)
+            markup.add(main_menu_button)
+
+            bot.send_message(message.chat.id, 'Какую операционную систему ты используешь?', reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text in ['🖥 Windows', '🍏 MacOS', '🐧 Linux'])
+def handle_os_response(message):
+      if message.text == '🖥 Windows':
+            bot.send_message(message.chat.id, """<b>Установка Git на Windows</b>
+
+<b>Шаг 1:</b> Перейди на официальный сайт Git (https://git-scm.com/downloads/win) во вкладку "Downloads for Windows".
+
+<b>Шаг 2:</b> Выбери соответствующий установочный файл:
+• 32-bit Git for Windows Setup
+• 64-bit Git for Windows Setup
+
+Чтобы узнать разрядность твоей ОС, воспользуйся инструкцией: https://support.microsoft.com/ru-ru/office/определение-наличия-32-или-64-разрядной-версии-операционной-системы-windows-на-компьютере-aac162a1-0cb3-46f2-888f-2f22897396ce
+
+<b>Шаг 3:</b> Запусти загруженный файл.
+
+<b>Шаг 4:</b> Поставь галочку напротив "Only show new options", чтобы программа автоматически выбрала подходящие для твоего устройства параметры. Если хочешь установить вручную, следуй инструкции: https://timeweb.cloud/tutorials/git/ustanovka-git-na-windows.
+
+<b>Шаг 5:</b> Нажми "Install" и дождись завершения установки.""", parse_mode='HTML')
+
+      elif message.text == '🍏 MacOS':
+            bot.send_message(message.chat.id, """<b>Установка Git на MacOS</b>
+
+1. Установка Git через Homebrew:
+   • Открой терминал и введи команду: <code>brew install git</code>
+
+2. Установка через Xcode Command Line Tools:
+   • Открой терминал и введи команду: <code>git --version</code>
+   Если Git не установлен, тебе будет предложено установить Xcode Command Line Tools.
+
+3. Установка через официальный сайт Git:
+   • Перейди на https://git-scm.com/download/mac и следуй инструкциям.
+
+<b>После установки:</b>
+Настрой Git, указав имя пользователя и email:
+<code>git config --global user.name "Ваше Имя"</code>
+<code>git config --global user.email "ваш.email@example.com"</code>""", parse_mode='HTML')
+
+      elif message.text == '🐧 Linux':
+            bot.send_message(message.chat.id, """<b>Установка Git на Linux</b>
+
+Для установки Git на Linux выполните следующие шаги в зависимости от вашей дистрибуции:
+
+1. Для Ubuntu / Debian:
+   ```
+   sudo apt update
+   sudo apt install git
+   ```
+
+2. Для Fedora:
+   ```
+   sudo dnf install git
+   ```
+
+3. Для Arch Linux:
+   ```
+   sudo pacman -S git
+   ```
+
+<b>После установки:</b>
+Настрой Git, указав имя пользователя и email:
+<code>git config --global user.name "Ваше Имя"</code>
+<code>git config --global user.email "ваш.email@example.com"</code>""", parse_mode='HTML')
+
+      markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+      yes_button = types.KeyboardButton('✅ Да, Git установлен')
+      no_button = types.KeyboardButton('❌ Нет, возникли проблемы')
+      main_menu_button = types.KeyboardButton('🏠 Вернуться к главному меню', request_contact=False)
+      markup.add(yes_button, no_button)
+      markup.add(main_menu_button)
+
+      bot.send_message(message.chat.id, 'Установил ли ты Git успешно?', reply_markup=markup)
