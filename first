@@ -1,0 +1,45 @@
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot('7675435772:AAEyZchpvacB6sL1p1dvLZZrIcE8FBQr6DU')
+
+user_current_question = {}
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+      bot.send_message(message.chat.id, 'Привет! Я помогу тебе освоить Git.')
+
+      markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+      yes_button = types.KeyboardButton('✅ Да')
+      no_button = types.KeyboardButton('❌ Нет')
+
+      check_knowledge_button = types.KeyboardButton('🎓 Проверить знания по Git')
+      flashcards_button = types.KeyboardButton('📝 Учебные карточки по Git')
+      markup.add(yes_button, no_button, check_knowledge_button, flashcards_button)
+
+      bot.send_message(message.chat.id, 'Установлен ли у тебя Git?', reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text in ['✅ Да', '❌ Нет'])
+def handle_git_response(message):
+      if message.text == '✅ Да':
+            markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            vs_code_button = types.KeyboardButton('🖥 Visual Studio/VS Code')
+            terminal_button = types.KeyboardButton('💻 Терминал')
+            main_menu_button = types.KeyboardButton('🏠 Вернуться к главному меню', request_contact=False)
+            markup.add(vs_code_button, terminal_button)
+            markup.add(main_menu_button)
+
+            bot.send_message(message.chat.id, 'Как ты хочешь работать с Git?', reply_markup=markup)
+
+      elif message.text == '❌ Нет':
+            markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            windows_button = types.KeyboardButton('🖥 Windows')
+            macos_button = types.KeyboardButton('🍏 MacOS')
+            linux_button = types.KeyboardButton('🐧 Linux')
+            main_menu_button = types.KeyboardButton('🏠 Вернуться к главному меню', request_contact=False)
+            markup.add(windows_button, macos_button, linux_button)
+            markup.add(main_menu_button)
+
+            bot.send_message(message.chat.id, 'Какую операционную систему ты используешь?', reply_markup=markup)
